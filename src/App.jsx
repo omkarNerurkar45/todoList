@@ -53,7 +53,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <div className=" pb-20 h-[93.7vh] bg-linear-to-r from-gray-800 via-blue-700 to-gray-900 text-amber-50 h-100vh pt-15">
+      <div className="  md:pb-20 pt-10 h-[93.7vh] bg-linear-to-r from-gray-800 via-blue-700 to-gray-900 text-amber-50 h-100vh md:pt-15">
         <div className="todos shadow-[20px_20px_50px_rgba(17,24,39,0.7)] border w-2/3 m-auto rounded-2xl h-[60vh] pt-2">
           <h1 className="font-bold p-2 text-center text-2xl">Add a Todo</h1>
 
@@ -81,12 +81,12 @@ function App() {
             return (
               <div
                 key={item.id}
-                className="display mx-auto m-2 text-amber-50 flex w-1/2  justify-between border-b-1 p-3"
+                className="display mx-auto m-2 text-amber-50 flex md:w-1/2  justify-between border-b-1 p-3"
               >
                 <div className={item.isCompleted ? "line-through" : ""}>
                   {item.todo}
                 </div>
-                <div className="buttons">
+                <div className="buttons flex ">
                   <input
                     onChange={handleCheckBox}
                     type="checkbox"
