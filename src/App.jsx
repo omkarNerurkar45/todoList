@@ -1,19 +1,53 @@
 import { useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
 
   const handleAdd = () => {
-    setTodos([...todos, { todo, isCompleted: false }]);
-    setTodo("");
     console.log(todos);
+    if (todo.trim() === "") {
+      alert("Please enter a todo before adding!");
+      return;
+    } else {
+      setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]);
+      setTodo("");
+    }
   };
 
   const handleChange = (e) => {
     setTodo(e.target.value);
+  };
+
+  const handleDelete = (e, id) => {
+    let newTodos = todos.filter((item) => {
+      return item.id !== id;
+    });
+    setTodos(newTodos);
+    console.log(`ths id is ${id}`);
+  };
+
+  const handleCheckBox = (e) => {
+    let id = e.target.name;
+    let index = todos.findIndex((item) => {
+      return item.id === id;
+    });
+    let newTodos = [...todos];
+    newTodos[index].isCompleted = !newTodos[index].isCompleted;
+    setTodos(newTodos, todos);
+  };
+
+  const handleEdit = (e, id) => {
+    let t = todos.filter((i) => i.id === id);
+    setTodo(t[0].todo);
+
+    let newTodos = todos.filter((item) => {
+      return item.id !== id;
+    });
+    setTodos(newTodos);
   };
 
   return (
@@ -31,7 +65,7 @@ function App() {
               value={todo}
             />
             <button
-              className="border-2 w-20 p-2 rounded-3xl cursor-pointer"
+              className="border-2 w-20 p-2 rounded-3xl cursor-pointer hover:bg-blue-500 transition-all shadow-[5px_5px_5px_rgba(17,24,39,0.7)]"
               onClick={handleAdd}
             >
               Add
@@ -40,16 +74,46 @@ function App() {
           <div className="list text-center font-bold pt-5 text-2xl">
             Your Todos
           </div>
-          {todos.map(item=>{
-
-          return <div className="display mx-auto m-2 text-amber-50 flex w-1/2  justify-between border-b-1 p-3">
-        <div className={item.isCompleted?"line-through":""} >{item.todo}</div>
-        <div className="buttons">
-        <button className="mx-1 border-1 w-20 rounded-3xl">Edit</button>
-        <button className="mx-1 border-1 w-20 rounded-3xl">Delete</button>
-        </div>
-      </div>
-      })}
+          {todos.length === 0 && (
+            <div className="mx-auto text-center pt-5">No Todos to Display</div>
+          )}
+          {todos.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="display mx-auto m-2 text-amber-50 flex w-1/2  justify-between border-b-1 p-3"
+              >
+                <div className={item.isCompleted ? "line-through" : ""}>
+                  {item.todo}
+                </div>
+                <div className="buttons">
+                  <input
+                    onChange={handleCheckBox}
+                    type="checkbox"
+                    className="mx-1"
+                    name={item.id}
+                    id=""
+                  />
+                  <button
+                    className="shadow-[5px_5px_5px_rgba(17,24,39,0.7)] mx-1 border-1 w-20 rounded-3xl cursor-pointer hover:bg-blue-500 transition-all "
+                    onClick={(e) => {
+                      handleEdit(e, item.id);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="shadow-[5px_5px_5px_rgba(17,24,39,0.7)] mx-1 border-1 w-20 rounded-3xl cursor-pointer hover:bg-blue-500 transition-all "
+                    onClick={(e) => {
+                      handleDelete(e, item.id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </>
