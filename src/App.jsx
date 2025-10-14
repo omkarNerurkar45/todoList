@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import { v4 as uuidv4 } from "uuid";
@@ -6,6 +6,19 @@ import { v4 as uuidv4 } from "uuid";
 function App() {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
+
+  const localServer = () => {
+    localStorage.setItem("todos", JSON.stringify(todos))
+  }
+
+  useEffect(()=>{
+    let todoString = localStorage.getItem("todos")
+    if(todoString) {
+      let todos = JSON.parse(localStorage.getItem("todos"))
+      setTodos(todos)
+    }
+  }, [])
+  
 
   const handleAdd = () => {
     console.log(todos);
@@ -16,6 +29,7 @@ function App() {
       setTodos([...todos, { id: uuidv4(), todo, isCompleted: false }]);
       setTodo("");
     }
+    localServer()
   };
 
   const handleChange = (e) => {
@@ -28,6 +42,7 @@ function App() {
     });
     setTodos(newTodos);
     console.log(`ths id is ${id}`);
+    localServer()
   };
 
   const handleCheckBox = (e) => {
@@ -38,6 +53,7 @@ function App() {
     let newTodos = [...todos];
     newTodos[index].isCompleted = !newTodos[index].isCompleted;
     setTodos(newTodos, todos);
+    localServer()
   };
 
   const handleEdit = (e, id) => {
@@ -48,6 +64,7 @@ function App() {
       return item.id !== id;
     });
     setTodos(newTodos);
+    localServer()
   };
 
   return (
